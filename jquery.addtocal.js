@@ -21,7 +21,7 @@
        */
       calendars : [
         {value: 1,
-          label:"Add to Google Calendar",
+          label:"Google Calendar",
           enabled : function(addtocal) { return true; },
           formatlink : function(eventDetails) {
             return "http://www.google.com/calendar/event?action=TEMPLATE&trp=false" +
@@ -32,7 +32,7 @@
             "&details=" + eventDetails.details +
             "&sprop=" + eventDetails.url;
           } },
-        {value: 2, label:"Add to Live Calendar",
+        {value: 2, label:"Live Calendar",
           enabled : function(addtocal) { return true; },
           formatlink : function(eventDetails) {
             return "http://calendar.live.com/calendar/calendar.aspx?rru=addevent" +
@@ -41,8 +41,8 @@
             "&summary=" + eventDetails.title +
             "&location=" + eventDetails.location;
           } },
-        {value: 3, label:"Add to Yahoo! Calendar",
-          enabled : function(addtocal) { return true; },
+        {value: 3, label:"Yahoo! Calendar",
+          enabled : function(addtocal) { return false; },
           formatlink : function(eventDetails) {
             var minsDuration = ( Date.parse(eventDetails.end) - Date.parse(eventDetails.start) ) / 60 / 1000;
             var durationString = (minsDuration / 60).toPaddedString(2) + (minsDuration%60).toPaddedString(2);
@@ -54,13 +54,13 @@
             "&DESC=" + eventDetails.details +
             "&URL=" + eventDetails.url;
           } },
-        {value: 4, label:"Add to 30boxes",
+        {value: 4, label:"30boxes",
           enabled : function(addtocal) { return addtocal.options.icalEnabled; },
           formatlink : function(eventDetails) {
             return ( eventDetails.webcalurl ?
             "http://30boxes.com/add.php?webcal=" + encodeURIComponent( eventDetails.webcalurl ) : null );
           } },
-        {value: 5, label:"iCal",
+        {value: 5, label:"iCalendar",
           enabled : function(addtocal) { return addtocal.options.icalEnabled; },
           formatlink : function(eventDetails) {
             return (eventDetails.icalurl ? eventDetails.icalurl : null);
@@ -157,7 +157,7 @@
       	.addClass( "ui-addtocal" )
       	.appendTo( $( this.options.appendTo || "body", doc )[0] )
       	.menu({
-      		selected: function( event, ui ) {
+      		select: function( event, ui ) {
       			var item = ui.item.data( "item.addtocal" ),
       				previous = self.previous;
 
@@ -176,7 +176,7 @@
       	.zIndex( this.element.zIndex() + 1 )
       	.css({ top: 0, left: 0 })
       	.hide()
-      	.data( "menu" );
+      	.data( "uiMenu" );
 
       if ( $.fn.bgiframe ) {
       	 this.menu.element.bgiframe();
@@ -212,7 +212,7 @@
     toggleMenu: function( event ) {
       var content = this.source;
       if ( content.length && ! ( this.menu.element.is(":visible") ) ) {
-        $('.ui-addtocal').AddToCal( 'close' );
+        $('.ui-addtocal').find('input').AddToCal('close');
       	content = this._normalize( content );
       	this._suggest( content );
       	this._trigger( "open" );
@@ -226,7 +226,7 @@
       if ( this.menu.element.is(":visible") ) {
       	this._trigger( "close", event );
       	this.menu.element.hide();
-      	this.menu.deactivate();
+      	this.menu.collapse();
       }
     },
 
@@ -257,7 +257,7 @@
       	textWidth;
       this._renderMenu( ul, items );
       // TODO refresh should check if the active item is still in the dom, removing the need for a manual deactivate
-      this.menu.deactivate();
+      this.menu.collapse();
       this.menu.refresh();
       this.menu.element.show().position( $.extend({
       	of: this.element
@@ -276,7 +276,7 @@
     },
 
     _renderItem: function( ul, item) {
-      return $( "<li></li>" )
+      return $( "<li class='small'></li>" )
       	.data( "item.addtocal", item )
       	.append( $( "<a></a>" ).text( item.label ) )
       	.appendTo( ul );
@@ -289,4 +289,3 @@
   });
 
 }(jQuery));
-
