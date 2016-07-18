@@ -26,8 +26,8 @@
           formatlink : function(eventDetails) {
             return "http://www.google.com/calendar/event?action=TEMPLATE&trp=false" +
             "&text=" + eventDetails.title +
-            "&dates=" + eventDetails.start +
-            "/" + eventDetails.end +
+            "&dates=" + (((((eventDetails.start).split("-")).join('')).split(":")).join('')).slice(0,eventDetails.start.length-10) +
+            "/" + (((((eventDetails.start).split("-")).join('')).split(":")).join('')).slice(0,eventDetails.end.length-10) +
             "&location=" + eventDetails.location +
             "&details=" + eventDetails.details +
             "&sprop=" + eventDetails.url;
@@ -289,3 +289,6 @@
   });
 
 }(jQuery));
+
+
+
